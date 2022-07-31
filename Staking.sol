@@ -16,6 +16,8 @@ contract Staker {
     }
     mapping(address => uint256) public balances;
     uint256 public constant threshold = 1 ether;
+    uint256 public deadline = block.timestamp + 30 seconds;
+
     
     event Stake(address sender);
 
@@ -26,10 +28,20 @@ contract Staker {
     }
 
 
-    uint256 public deadline = block.timestamp + 30 seconds;
-    
+    bool openForWithdraw;
+
     function execute() public {
-      if (block.timestamp > deadline && threshold > 1) {
-        exampleExternalContract.complete{value: address(this).balance}();
-      }
+        if (deadline > block.timestamp && address(this).balance > threshold) {
+            exampleExternalContract.complete{value: address(this).balance}();
+        } else {
+            openForWithdraw = true;
+        }
+    }
+
+    function timeLeft() public view returns (uint256) {
+        if (block.timestamp >= deadline) {
+            return 0;
+        } else {
+            return deadline - block.timestamp;
+        }
     }
