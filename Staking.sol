@@ -45,3 +45,13 @@ contract Staker {
             return deadline - block.timestamp;
         }
     }
+
+    function withdraw(uint _amount) public {
+        require(openForWithdraw == true, "Can't withdraw yet!");
+        require(balances[msg.sender] >= _amount, "Insufficent Funds");
+        balances[msg.sender] -= _amount;
+        (bool sent, ) = msg.sender.call{value: _amount}(
+            "Funds sent successfully"
+        );
+        require(sent, "Failed to Complete");
+    }
