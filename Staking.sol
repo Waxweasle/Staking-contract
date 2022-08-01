@@ -46,12 +46,15 @@ contract Staker {
         }
     }
 
-    function withdraw(uint _amount) public {
+    function withdraw() public {
         require(openForWithdraw == true, "Can't withdraw yet!");
-        require(balances[msg.sender] >= _amount, "Insufficent Funds");
-        balances[msg.sender] -= _amount;
-        (bool sent, ) = msg.sender.call{value: _amount}(
-            "Funds sent successfully"
-        );
-        require(sent, "Failed to Complete");
+        payable(msg.sender).transfer(address(this).balance);
+        
+        // below are more specfic withdraw function parameters
+        //require(balances[msg.sender] >= _amount, "Insufficent Funds");
+        //balances[msg.sender] -= _amount;
+        //(bool sent, ) = msg.sender.call{value: _amount}(
+        //    "Funds sent successfully"
+        //);
+        //require(sent, "Failed to Complete");
     }
