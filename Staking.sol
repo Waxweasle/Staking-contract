@@ -29,8 +29,14 @@ contract Staker {
 
 
     bool openForWithdraw;
+    
+    modifier notCompleted() {
+        require(openForWithdraw == false);
+        _;
+    }
 
-    function execute() public {
+
+    function execute() public notCompleted{
         if (deadline > block.timestamp && address(this).balance > threshold) {
             exampleExternalContract.complete{value: address(this).balance}();
         } else {
@@ -46,7 +52,7 @@ contract Staker {
         }
     }
 
-    function withdraw() public {
+    function withdraw() public notCompleted{
         require(openForWithdraw == true, "Can't withdraw yet!");
         payable(msg.sender).transfer(address(this).balance);
         }
@@ -61,8 +67,8 @@ contract Staker {
      // Receive Ether Function to collect & stake ETH sent directly to the contract address   
      receive() external payable {
         stake();
-    }
+        }
         
-    }
+}
     
     
