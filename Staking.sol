@@ -49,7 +49,7 @@ contract Staker {
     function withdraw() public {
         require(openForWithdraw == true, "Can't withdraw yet!");
         payable(msg.sender).transfer(address(this).balance);
-        
+        }
         // below are more specfic withdraw function parameters
         //require(balances[msg.sender] >= _amount, "Insufficent Funds");
         //balances[msg.sender] -= _amount;
@@ -57,4 +57,12 @@ contract Staker {
         //    "Funds sent successfully"
         //);
         //require(sent, "Failed to Complete");
+        
+     // Receive Ether Function to collect & stake ETH sent directly to the contract address   
+     receive() external payable {
+        stake();
     }
+        
+    }
+    
+    
